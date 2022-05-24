@@ -1,6 +1,7 @@
 <template>
   <div>
-      <h1>메인 페이지테스트중</h1>
+      
+      <p>넉스트 시작하기</p>
   </div>
 </template>
 
