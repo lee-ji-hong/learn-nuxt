@@ -11,7 +11,7 @@
       <div class="side-panel">
         <p class="name">{{ product.name }}</p>
         <p class="price">{{ product.price }}</p>
-        <!-- <button type="button" @click="addToCart">Add to Cart</button> -->
+        <button type="button" @click="addToCart">카트에 담기</button>
       </div>
     </div>
   </div>
@@ -19,13 +19,24 @@
 </template>
 
 <script>
-import {fetchProductById} from '@/api/index';
+import {fetchProductById, createCartItem} from '@/api/index';
 
 export default {
+  // 해당하는 products 데이터 불러옴 
     async asyncData({ params }) {
     const response = await fetchProductById(params.id)
     return { product: response.data }
   },
+
+  methods: {
+    // 장바구니 추가 이벤트
+    async addToCart() {
+      const response = await createCartItem(this.product)
+      console.log(response)
+      this.$store.commit('addCartItem',this.product)
+      this.$router.push(`/cart`)
+    },
+  }
 }
 </script>
 

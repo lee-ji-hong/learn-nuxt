@@ -7,9 +7,6 @@
       v-model="searchKeyword"
       @search="searchProducts"
       />
-      <div>
-        
-      </div>
       <ul>
         <li
           v-for="product in products" 
@@ -25,6 +22,9 @@
           <span>{{product.price}}</span>
         </li>
       </ul>
+      <div class="cart-wrapper">
+        <button class="btn" @click="moveToCartPage">장바구니 바로가기</button>
+      </div>
     </main>
   </div>
 </template>
@@ -53,9 +53,11 @@ export default {
      }
    },
   methods: {
+    // 상품목록 클릭이벤트
     moveToDetailPage(id) {
-      this.$router.push(`detail/${id}`)
+      this.$router.push(`detail/${id}`) // nuxt에서는 router를 내장 하고있어서 따로 선언해주지 않아도 된다. 
     },
+    // api 호출이벤트
     async searchProducts() {
       const response = await fetchProductsByKeyword(this.searchKeyword)
       console.log(response.data)
@@ -63,6 +65,10 @@ export default {
     ...item,
     imageUrl: `${item.imageUrl}?random=${Math.random()}`,
   }))
+    },
+    // cartPage로 이동
+    moveToCartPage() {
+      this.$router.push(`/cart`)
     }
   },
 }
