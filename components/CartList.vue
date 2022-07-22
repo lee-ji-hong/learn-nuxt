@@ -19,7 +19,7 @@
       </ul>
     </div>
     <div class="extra-panel">
-      <button>구매하기</button>
+      <button @click="moveToRoulettePage">구매하기</button>
     </div>
   </div>
 </template>
@@ -29,7 +29,13 @@ import {FETCH_CART_ITEMS} from '@/store'
 export default {
     async fetch() {
         await this.$store.dispatch(FETCH_CART_ITEMS)
-    }
+    },
+  methods: {
+    // cartPage로 이동
+    moveToRoulettePage() {
+      this.$router.push(`/roulette`)
+    },
+  },
 }
 </script>
 

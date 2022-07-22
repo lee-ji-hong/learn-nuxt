@@ -22,6 +22,8 @@
           <span>{{product.price}}</span>
         </li>
       </ul>
+      <infinite-loading  spinner = "waveDots" @infinite="infiniteHandler"></infinite-loading>
+
       <div class="cart-wrapper">
         <button class="btn" @click="moveToCartPage">장바구니 바로가기</button>
       </div>
@@ -31,12 +33,17 @@
 
 <script>
 import axios from 'axios';
+import InfiniteLoading from 'vue-infinite-loading' 
 import SearchInput from '@/components/SearchInput.vue';
 import { fetchProductsByKeyword } from '@/api/index'
+
+const api = 'http://localhost:3000/products'
 export default {
   
   name: 'IndexPage',
-  components: { SearchInput },
+  components: { SearchInput,
+  InfiniteLoading
+  },
 
   async asyncData(){
     const response = await axios.get('http://localhost:3000/products')
@@ -48,11 +55,29 @@ export default {
   return {products}
    },
    data() {
-     return {
-       searchKeyword: '',
+    return {
+      searchKeyword: '',
+      page : 1,
      }
    },
   methods: {
+    // 무한 스크롤
+    infiniteHandler(test) {
+      axios.get(api, {
+        params: {
+          page: this.page,
+        },
+      }).then((item ) => {
+        if (item.length) {
+          this.page += 1;
+          this.products.push(...item);
+          test.loaded();
+        } else {
+          test.complete();
+        }
+      });
+    },
+
     // 상품목록 클릭이벤트
     moveToDetailPage(id) {
       this.$router.push(`detail/${id}`) // nuxt에서는 router를 내장 하고있어서 따로 선언해주지 않아도 된다. 
@@ -69,7 +94,7 @@ export default {
     // cartPage로 이동
     moveToCartPage() {
       this.$router.push(`/cart`)
-    }
+    },
   },
 }
 </script>
